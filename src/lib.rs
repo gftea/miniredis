@@ -1,7 +1,3 @@
-pub mod command;
+pub mod cmd;
 pub mod connection;
-
-
-pub mod request;
-pub mod response;
 pub mod frame;

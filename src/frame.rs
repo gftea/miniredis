@@ -240,7 +240,7 @@ impl Frame {
         }
     }
     /// Returns an empty array
-    pub(crate) fn array() -> Frame {
+    pub(crate) fn new_array_frame() -> Frame {
         Frame::Array(vec![])
     }
 
@@ -271,7 +271,32 @@ impl Frame {
             _ => panic!("not an array frame"),
         }
     }
+
+    pub(crate) fn into_iterator(self) -> vec::IntoIter<Frame> {
+        match self {
+            Frame::Array(vec) => {
+                vec.into_iter()
+            }
+            _ => panic!("must be array fram")
+        }
+    }
 }
+
+impl crate::cmd::Parse for vec::IntoIter<Frame> {
+    fn next_string(self: &mut std::vec::IntoIter<Frame>) -> Option<String>  {
+        let frame = self.next()?;
+        match frame {
+            Frame::Bulk(bs) => {
+                String::from_utf8(bs.as_ref().to_vec()).ok()
+            },
+            Frame::Simple(s) => {
+                Some(s)
+            },
+            _ => None
+        }
+    }
+}
+
 
 impl From<&str> for Error {
     fn from(src: &str) -> Error {
@@ -310,6 +335,10 @@ impl PartialEq<&str> for Frame {
     }
 }
 
+
+//////////////////////////////
+/// Unit Test
+////////////////////////////// 
 #[test]
 #[should_panic(expected = "protocol error")]
 fn test_check() {
