@@ -11,7 +11,7 @@ use std::{
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use tokio::io::AsyncWriteExt;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Frame {
     Simple(String),
     Error(String),
@@ -33,6 +33,7 @@ const NULL_BULK: &[u8] = b"-1\r\n";
 #[derive(Debug)]
 pub enum Error {
     Incomplete,
+
     Other(String),
 }
 impl std::error::Error for Error {}
@@ -277,22 +278,56 @@ impl Frame {
             Frame::Array(vec) => {
                 vec.into_iter()
             }
-            _ => panic!("must be array fram")
+            _ => panic!("must be array frame")
         }
     }
 }
 
-impl crate::cmd::Parse for vec::IntoIter<Frame> {
-    fn next_string(self: &mut std::vec::IntoIter<Frame>) -> Option<String>  {
-        let frame = self.next()?;
+
+/// This trait better to be in command module
+/// why?
+/// it means this is the interfaces required by command module, 
+/// - user put requirements on interfaces
+/// - provider implement the interface
+/// 
+pub(crate) trait Parse {
+    fn next_string(&mut self) -> Result<String, Error>;
+    fn next_bytes(&mut self) -> Result<Bytes, Error>;
+    fn next_int(&mut self) -> Result<u64, Error>;
+}
+
+
+impl Parse for vec::IntoIter<Frame> {
+    fn next_string(self: &mut std::vec::IntoIter<Frame>) -> Result<String, Error>  {
+        let frame = self.next().ok_or(Error::Other("not a string".to_string()))?;
         match frame {
             Frame::Bulk(bs) => {
-                String::from_utf8(bs.as_ref().to_vec()).ok()
+                Ok(String::from_utf8(bs.as_ref().to_vec())?)
             },
             Frame::Simple(s) => {
-                Some(s)
+                Ok(s)
             },
-            _ => None
+            _ => Err(Error::Other("not a frame with string".to_string()))
+        }
+    }
+
+    fn next_bytes(&mut self) -> Result<Bytes, Error> {
+        let frame = self.next().ok_or(Error::Other("not a bytes".to_string()))?;
+        match frame {
+            Frame::Bulk(bs) => {
+                Ok(bs)
+            },
+            _ => Err(Error::Other("not a frame with bytes".to_string()))
+        }
+    }
+
+    fn next_int(&mut self) -> Result<u64, Error> {
+        let frame = self.next().ok_or(Error::Other("not a bytes".to_string()))?;
+        match frame {
+            Frame::Integer(n) => {
+                Ok(n)
+            }
+            _ => Err(Error::Other("not a integer frame".to_string()))
         }
     }
 }

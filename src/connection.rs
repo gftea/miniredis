@@ -72,6 +72,13 @@ impl Connection {
 
         loop {
             let len = self.stream.read_buf(&mut self.read_buffer).await?;
+            if len == 0 {
+                if self.read_buffer.is_empty() {
+                    return Err(Error::Other("peer shutdown".to_string()));
+                } else {
+                    return Err(Error::IO("connection failure".to_string()));
+                }
+            }
             println!("read: {}", len);
 
             let mut cursor = Cursor::new(self.read_buffer.as_ref());
