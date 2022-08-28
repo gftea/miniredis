@@ -7,8 +7,8 @@ pub struct Get {
 }
 
 impl Get {
-    pub fn new(key: String) -> Self {
-        Get { key }
+    pub fn new(key: &str) -> Self {
+        Get { key: key.to_string() }
     }
 
     pub fn into_frame(self) -> Frame {
@@ -21,7 +21,7 @@ impl Get {
     /// only visiable in `cmd` module
     /// TODO: currently it returns frame::Error, should use command Error
     pub(super) fn from_frame(it: &mut impl Parse) -> Result<Self, Error> {
-        Ok(Get::new(it.next_string()?))
+        Ok(Get::new(&it.next_string()?))
     }
 
     pub async fn apply(&self, db: &Database, conn: &mut Connection) -> Result<(), super::Error> {

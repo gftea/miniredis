@@ -8,8 +8,8 @@ pub struct Set {
 }
 
 impl Set {
-    pub fn new(key: String, value: Bytes) -> Self {
-        Set { key, value }
+    pub fn new(key: &str, value: Bytes) -> Self {
+        Set { key: key.to_string(), value }
     }
 
     pub fn into_frame(self) -> Frame {
@@ -24,7 +24,7 @@ impl Set {
     pub(super) fn from_frame(it: &mut dyn Parse) -> Result<Self, Error> {
         let key = it.next_string()?;
         let value = it.next_bytes()?;
-        Ok(Set::new(key, value))
+        Ok(Set::new(&key, value))
     }
     pub async fn apply(&self, db: &mut Database, conn: &mut Connection) -> Result<(), super::Error> {
         // generic behavior handling without knowing underlying storage and connection?
