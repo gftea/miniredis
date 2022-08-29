@@ -21,7 +21,7 @@ fn test_set_cmd() {
 
         let cmd = cmd::Set::new("name", Bytes::from("simon"));
         let frame = cmd.into_frame();
-        let len = conn.write_frame(frame).await.unwrap();
+        let _len = conn.write_frame(frame).await.unwrap();
         // println!("written: {}", len);
 
         let ans = conn.read_frame().await.unwrap();
@@ -31,7 +31,7 @@ fn test_set_cmd() {
 
         let cmd = cmd::Get::new("name");
         let frame = cmd.into_frame();
-        let len = conn.write_frame(frame).await.unwrap();
+        let _len = conn.write_frame(frame).await.unwrap();
         // println!("written: {}", len);
 
         let ans = conn.read_frame().await.unwrap();
@@ -52,10 +52,10 @@ fn test_get_cmd() {
         let mut conn = Connection::new(stream).unwrap();
         const LOOPS: usize = 2;
 
-        for i in 0..LOOPS {
+        for _i in 0..LOOPS {
             let cmd = cmd::Get::new("name");
             let frame = cmd.into_frame();
-            let len = conn.write_frame(frame).await.unwrap();
+            let _len = conn.write_frame(frame).await.unwrap();
             // println!("written: {}", len);
 
             let ans = conn.read_frame().await.unwrap();
@@ -71,10 +71,10 @@ fn test_get_cmd_external_server() {
         let mut conn = Connection::new(stream).unwrap();
         const LOOPS: usize = 2;
 
-        for i in 0..LOOPS {
+        for _i in 0..LOOPS {
             let cmd = cmd::Get::new("name");
             let frame = cmd.into_frame();
-            let len = conn.write_frame(frame).await.unwrap();
+            let _len = conn.write_frame(frame).await.unwrap();
             // println!("written: {}", len);
 
             let ans = conn.read_frame().await.unwrap();

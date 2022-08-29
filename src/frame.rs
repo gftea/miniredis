@@ -8,7 +8,7 @@ use std::{
     vec,
 };
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, BufMut, Bytes};
 
 
 #[derive(Debug, PartialEq)]

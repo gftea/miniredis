@@ -116,11 +116,11 @@ fn test_connection() {
         let mut conn = Connection::new(stream).unwrap();
         const LOOPS: usize = 10000;
 
-        for i in 0..LOOPS {
+        for _i in 0..LOOPS {
             let mut frame = Frame::new_array_frame();
             frame.push_bulk("get".into());
             frame.push_bulk("name".into());
-            let len = conn.write_frame(frame).await.unwrap();
+            let _len = conn.write_frame(frame).await.unwrap();
             // println!("written: {}", len);
 
             let ans = conn.read_frame().await.unwrap();
@@ -135,7 +135,7 @@ fn test_pipeline() {
         let stream = TcpStream::connect("127.0.0.1:6379").await.unwrap();
         let mut conn = Connection::new(stream).unwrap();
         const LOOPS: usize = 10000;
-        for i in 0..LOOPS {
+        for _i in 0..LOOPS {
             let mut frame = Frame::new_array_frame();
             frame.push_bulk("get".into());
             frame.push_bulk("name".into());
@@ -144,7 +144,7 @@ fn test_pipeline() {
 
             // println!("{i}");
         }
-        for i in 0..LOOPS {
+        for _i in 0..LOOPS {
             let ans = conn.read_frame().await.unwrap();
             assert_eq!(ans, "simon");
             // println!("{i}");

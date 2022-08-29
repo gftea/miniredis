@@ -29,7 +29,7 @@ impl Solution {
             None => num,
             Some(rc_node) =>  {
                 num += 1;
-                let x = rc_node.borrow();
+                let _x = rc_node.borrow();
                 let lmax = Self::next_node(rc_node.borrow().left.as_ref(), num);
                 let rmax = Self::next_node(rc_node.borrow().right.as_ref(), num);
                 lmax.max(rmax)

@@ -1,6 +1,6 @@
-use std::{io::Error, thread, time::Duration};
+use std::{io::Error};
 
-use miniredis::server::{Server, start};
+use miniredis::server::{start};
 
 #[tokio::main]
 pub async fn main() -> Result<(), Error> {

@@ -117,7 +117,7 @@ fn traverse(root: Option<Rc<RefCell<TreeNode>>>) {
 
 #[test]
 fn test_tree_generator() {
-    let root = generate_binary_tree(100);
+    let _root = generate_binary_tree(100);
     // traverse(root);
     // println!("{root:#?}")
 }

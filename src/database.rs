@@ -18,7 +18,7 @@ impl Database {
         }
     }
     pub fn get<'a>(&'a self, key: &String) -> Option<Bytes> {
-        self.store.get(key).map(|bs| bs.clone())
+        self.store.get(key).cloned()
     }
     pub fn set(&mut self, key: String, val: Bytes) -> Option<Bytes> {
         self.store.insert(key, val)
