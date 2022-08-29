@@ -1,15 +1,10 @@
-use std::io::Error;
+use std::{io::Error, thread, time::Duration};
+
+use miniredis::server::{Server, start};
 
 #[tokio::main]
 pub async fn main() -> Result<(), Error> {
-    tokio::select! {
-
-        _ = tokio::signal::ctrl_c() => {
-
-            eprintln!("shutdown server");
-        }
-    }
-
-    // Server::start().await;
+    println!("start server");
+    start("127.0.0.1:6379").await?;
     Ok(())
 }

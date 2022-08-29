@@ -2,6 +2,8 @@ pub mod cmd;
 pub mod connection;
 pub mod database;
 pub mod frame;
+pub mod  server;
+
 
 #[inline]
 pub fn fibonacci(n: u64) -> u64 {
@@ -42,6 +44,7 @@ impl TreeNode {
 use std::cell::RefCell;
 use std::ops::Rem;
 use std::rc::Rc;
+
 pub struct Solution;
 impl Solution {
     pub fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
@@ -53,8 +56,11 @@ impl Solution {
             None => num,
             Some(rc_node) => {
                 num += 1;
-                let lmax = Self::next_node(rc_node.borrow().left.as_ref(), num);
-                let rmax = Self::next_node(rc_node.borrow().right.as_ref(), num);
+                use std::borrow::Borrow; //blanket implementation
+
+                let lmax = Self::next_node((&**rc_node ).borrow().left.as_ref(), num);
+
+                let rmax = Self::next_node(<Rc<RefCell<TreeNode>> as Borrow<RefCell<TreeNode>>>::borrow(rc_node).borrow().right.as_ref(), num);
                 lmax.max(rmax)
             }
         }
