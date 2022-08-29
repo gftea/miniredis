@@ -21,7 +21,7 @@ impl Handler {
         let mut peer_shutdown = false;
         loop {
             let frame = tokio::select! {
-                res = self.connection.read_frame(), if peer_shutdown == false => {
+                res = self.connection.read_frame(), if !peer_shutdown => {
                     match res {
                         Ok(frame) => frame,
                         Err(msg) => {println!("{msg:?}"); peer_shutdown = true; continue;}
@@ -56,7 +56,7 @@ impl Handler {
 
 impl Server {
     pub fn new() -> Self {
-        let (tx, rx) = broadcast::channel(1);
+        let (tx, _rx) = broadcast::channel(1);
         Server {
             db: Database::new(),
             shutdown_broacaster: tx,

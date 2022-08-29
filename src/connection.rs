@@ -61,7 +61,7 @@ impl Connection {
     pub async fn read_frame(&mut self) -> Result<Frame, Error> {
         if self.read_buffer.has_remaining() {
             let mut cursor = Cursor::new(self.read_buffer.as_ref());
-            if let Ok(_) = Frame::check(&mut cursor) {
+            if Frame::check(&mut cursor).is_ok() {
                 cursor.set_position(0);
                 let frame = Frame::decode(&mut cursor)?;
                 let len = cursor.position() as usize;

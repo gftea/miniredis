@@ -69,7 +69,7 @@ impl Solution {
 
 pub fn add_leaf_nodes(node: Option<Rc<RefCell<TreeNode>>>, cnt: &mut i32, max: i32) {
     match node {
-        None => return,
+        None => (),
         Some(root) => {
             if *cnt >= max {
                 return;
@@ -111,7 +111,7 @@ fn traverse(root: Option<Rc<RefCell<TreeNode>>>) {
             traverse(node.borrow().left.clone());
             traverse(node.borrow().right.clone());
         }
-        None => return,
+        None => (),
     }
 }
 

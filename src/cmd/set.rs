@@ -33,7 +33,7 @@ impl Set {
         /// 
         match db.set(self.key.clone(), self.value.clone()) {
             // exisiting key
-            Some(bs) => conn.write_frame(Frame::Simple("OK".to_string())).await?,
+            Some(_bs) => conn.write_frame(Frame::Simple("OK".to_string())).await?,
             // new key
             None => conn.write_frame(Frame::Simple("OK".to_string())).await?,
         };
